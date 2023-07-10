@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 // Module
+import { ComponentsModule } from '../components/components.module';
 import { SharedModule } from '../shared/shared.module';
 
 // Components
@@ -22,7 +24,10 @@ import { ProgressComponent } from './progress/progress.component';
   ],
   imports: [
     CommonModule,
+    FormsModule,
     RouterModule,
+
+    ComponentsModule,
     SharedModule
   ],
   exports:[
