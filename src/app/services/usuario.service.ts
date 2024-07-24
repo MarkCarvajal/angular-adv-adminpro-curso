@@ -6,6 +6,7 @@ import { LoginForm } from '../interfaces/login-form.interface';
 import { catchError, map, tap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { Router } from '@angular/router';
+import { Usuario } from '../models/usuario.model';
 
 const base_url = environment.base_url;
 
@@ -16,10 +17,17 @@ declare const google: any;
   providedIn: 'root',
 })
 export class UsuarioService {
+
+  public usuario!: Usuario;
+
   constructor(
     private http: HttpClient,
     private router: Router
     ) {}
+
+  get token(): string {
+    return localStorage.getItem('token') || '';
+  }
 
   logout(){
     localStorage.removeItem('token');
@@ -30,6 +38,10 @@ export class UsuarioService {
   }
 
   validarToken(): Observable<boolean>{
+    google.accounts.id.initialize({
+      client_id: "608547883073-m9dqdfphiblfgb06bkng7t97mhkhkc7c.apps.googleusercontent.com",
+    });
+
     const token = localStorage.getItem('token') || '';
 
     return this.http.get(`${base_url}/login/renew`, {
@@ -37,10 +49,12 @@ export class UsuarioService {
         'x-token': token
       }
     }).pipe(
-      tap( (resp: any) => {
+      map( (resp: any) => {
+        const { email, google, nombre,apellido, role, img = '', uid } = resp.usuario;
+        this.usuario = new Usuario( nombre, email, apellido, '', google, img, role, uid );
         localStorage.setItem('token', resp.token );
+        return true;
       }),
-      map( resp => true ),
       catchError( error => of(false) )
     );
   }
@@ -53,6 +67,20 @@ export class UsuarioService {
         localStorage.setItem('token', resp.token);
       })
     );
+  }
+
+  actualizarPerfil( data: { email: string, nombre: string, apellido: string, role?: string}){
+
+    data = {
+      ...data,
+      role: this.usuario.role
+    }
+
+    return this.http.put(`${base_url}/usuarios/${this.usuario.uid}`, data, {
+      headers: {
+        'x-token': this.token
+      }
+    });
   }
 
   login(formData: LoginForm) {
