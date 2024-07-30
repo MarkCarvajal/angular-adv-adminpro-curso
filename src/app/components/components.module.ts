@@ -5,13 +5,15 @@ import { NgModule } from '@angular/core';
 
 import { DonaComponent } from './dona/dona.component';
 import { IncrementadorComponent } from './incrementador/incrementador.component';
+import { ModalImagenComponent } from './modal-imagen/modal-imagen.component';
 
 
 
 @NgModule({
   declarations: [
     IncrementadorComponent,
-    DonaComponent
+    DonaComponent,
+    ModalImagenComponent
   ],
   imports: [
     CommonModule,
@@ -20,7 +22,8 @@ import { IncrementadorComponent } from './incrementador/incrementador.component'
   ],
   exports: [
     IncrementadorComponent,
-    DonaComponent
+    DonaComponent,
+    ModalImagenComponent
   ]
 })
 export class ComponentsModule { }
