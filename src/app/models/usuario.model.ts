@@ -20,9 +20,8 @@ export class Usuario {
     if(this.img?.includes('https')){
       return this.img;
     }
-
     // Para la imagen del usuario que viene cargada llamar al get
-    if(this.img){
+    else if(this.img){
       return `${base_url}/upload/usuarios/${this.img}`
     }else{
       return `${base_url}/upload/usuarios/no-image.png`
